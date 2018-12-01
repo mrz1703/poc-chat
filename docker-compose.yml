@@ -82,9 +82,47 @@ services:
 
   server:
     build: ./server/
+    command: /bin/sh -c "npm ci; npm start;"
+    volumes:
+      - ./server/:/app
+    ports:
+      - "3030:3030"
 
  ##################
  ### server end ###
+ ##################
+
+ ####################
+ ### client start ###
+ ####################
+
+  client:
+    build: ./client/
+    volumes:
+      - ./client/:/app
+    command: /bin/sh -c "npm ci; npm start;"
+    ports:
+      - "80:3000"
+
+ ##################
+ ### client end ###
+ ##################
+
+ ####################
+ ### redis start ###
+ ####################
+
+  redis:
+    hostname: redis
+    image: redis:alpine
+    restart: always
+    volumes:
+    - redis:/data
+    ports:
+      - "6379:6379"
+
+ ##################
+ ### redis end ###
  ##################
 
 
@@ -93,4 +131,5 @@ volumes:
   consul_server_1: null
   consul_server_2: null
   consul_server_bootstrap: null
+  redis: null
 #  nsqd: null
