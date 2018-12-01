@@ -35,26 +35,21 @@ const StyledDivider = styled(Divider)`
 
 class Chat extends Component {
     render() {
+        const {channel, messages} = this.props;
+
         return (
             <StyledLayout>
-                <StyledHeader>General Chat</StyledHeader>
+                <StyledHeader>{channel}</StyledHeader>
 
                 <StyledDivider/>
-
                 <StyledMessages>
+                {messages.map(message => (
                     <Message
-                        user="Sam"
-                        text="Hi there"
+                        user={message.user}
+                        text={message.text}
+                        me={message.user === channel}
                     />
-                    <Message
-                        user="Roma"
-                        text="Hi there"
-                    />
-                    <Message
-                        me
-                        user="Erzhan Torokulov"
-                        text="Hi there"
-                    />
+                ))}
                 </StyledMessages>
 
                 <StyledDivider/>

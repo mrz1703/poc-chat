@@ -8,6 +8,7 @@ require('dotenv').load();
 
 const server = require('http').createServer();
 const io     = require('socket.io')(server);
+io.origins('*:*') 
 
 /**
  * Port to listen to
@@ -51,6 +52,7 @@ io.on('connection', function (sock) {
 
     sock.on('disconnect', function () {
         users.delete(sock.id);
+        sock.broadcast.emit('user:disconnect', sock.id);
     });
 });
 
