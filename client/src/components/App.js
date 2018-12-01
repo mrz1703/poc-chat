@@ -28,40 +28,63 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
+      myId: null,
       currentChannel: 'general',
       users: [],
-      msgLocal: []
+      local: [],
+      general: [],
     };
   }
 
   componentDidMount() {
     this.socket = socketIOClient('http://localhost:3030');
     this.socket.on("msg:local", message => {
-      const {msgLocal} = this.state;
+      const {local} = this.state;
       this.setState({
-        msgLocal: [...msgLocal, message]
+        local: [...local, message]
+      })
+    });
+    this.socket.on("msg:general", message => {
+      const {general} = this.state;
+      this.setState({
+        general: [...general, message]
       })
     });
     this.socket.on("msg:local:history", messages => {
       this.setState({
-        msgLocal: messages
+        local: messages
+      })
+    });
+    this.socket.on("msg:general:history", messages => {
+      this.setState({
+        general: messages
       })
     });
     this.socket.on("user:list", users => this.setState({ users }));
     this.socket.on("user:new", newUserId => {
       this.setState({ users: [...this.state.users, newUserId] })
     });
+    this.socket.on("user:id", myId => {
+      this.setState({ myId })
+    });
     this.socket.on("user:disconnect", newUserId => {
       this.setState({ users: this.state.users.filter(id => id !== newUserId) })
     });
   }
 
-  onSend = (message) => {
-    if (this.socket) {
-      this.socket.emit(`msg:${this.state.currentChannel}`, message);
-    } else {
+  onSend = (text) => {
+    if (!this.socket) {
       console.error('Socket is not defined');
     }
+    const {currentChannel, myId} = this.state;
+    const message = {
+      user: myId,
+      text: text,
+      timestamp: new Date().toISOString()
+    }
+    this.socket.emit(`msg:${currentChannel}`, message);
+
+    this.setState({[currentChannel]: [...(this.state[currentChannel] || []), message]})
   }
 
   onChatChange = (channelId) => {
@@ -89,6 +112,7 @@ class App extends Component {
             <Chat
               channel={currentChannel}
               messages={this.state[currentChannel] || []}
+              onSend={this.onSend}
             />
         </StyledLayout>
       </AppContext.Provider>
