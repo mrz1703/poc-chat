@@ -5,13 +5,11 @@ import { Input } from 'antd';
 
 import Message from './Message';
 
-const { TextArea } = Input;
-
 const StyledLayout = styled.div`
     display: grid;
     grid-template-columns: 100%;
     grid-template-columns: 100%;
-    grid-template-rows: 25px 1px auto 1px 60px;
+    grid-template-rows: 25px 1px auto 1px 35px;
     padding: 0 5px;
     grid-row-gap: 5px;
 `;
@@ -34,8 +32,9 @@ const StyledDivider = styled(Divider)`
 `;
 
 class Chat extends Component {
+    state = {}
     render() {
-        const {channel, messages} = this.props;
+        const {channel, messages, onSend} = this.props;
 
         return (
             <StyledLayout>
@@ -55,10 +54,15 @@ class Chat extends Component {
                 <StyledDivider/>
 
                 <StyledInput>
-                    <TextArea
+                    <Input
                         placeholder="Start typing some message"
-                        autosize={{ minRows: 2, maxRows: 6 }}
-                        />
+                        value={this.state.value}
+                        onChange={event => this.setState({value: event.target.value})}
+                        onPressEnter={event => {
+                            onSend(event.target.value);
+                            this.setState({value: ''})
+                        }}
+                    />
                 </StyledInput>
             </StyledLayout>
         );

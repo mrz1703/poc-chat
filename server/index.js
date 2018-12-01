@@ -26,7 +26,8 @@ const users = new Set();
  * Array with chat history
  * @type {Array}
  */
-const history = [];
+const localHistory = [];
+const generalHistory = [];
 
 /**
  * Here comes the socket management part
@@ -35,19 +36,21 @@ io.on('connection', function (sock) {
 
     sock.emit('user:id', sock.id);
     sock.emit('user:list', [...users]);
-    sock.emit('msg:local:history', history);
+    sock.emit('msg:local:history', localHistory);
+    sock.emit('msg:general:history', generalHistory);
 
     users.add(sock.id);
     sock.broadcast.emit('user:new', sock.id);
 
     sock.on('msg:local', function (msg) {
-        history.push(msg);
+        localHistory.push(msg);
         sock.broadcast.emit('msg:local', msg);
     });
 
     sock.on('msg:general', function (msg) {
         // Here comes NSQ logic
-        msg;
+        localHistory.push(msg);
+        sock.broadcast.emit('msg:general', msg);
     });
 
     sock.on('disconnect', function () {
