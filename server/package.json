@@ -1,0 +1,28 @@
+{
+  "name": "ws-server",
+  "version": "0.0.1",
+  "description": "WS Server + NSQ + Consul",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/vrudko/poc-chat.git"
+  },
+  "keywords": [
+    "nsq",
+    "consul",
+    "ws",
+    "chat"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vrudko/poc-chat/issues"
+  },
+  "homepage": "https://github.com/vrudko/poc-chat#readme"
+}
