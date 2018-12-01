@@ -108,10 +108,28 @@ services:
  ### client end ###
  ##################
 
+ ####################
+ ### redis start ###
+ ####################
+
+  redis:
+    hostname: redis
+    image: redis:alpine
+    restart: always
+    volumes:
+    - redis:/data
+    ports:
+      - "6379:6379"
+
+ ##################
+ ### redis end ###
+ ##################
+
 
 volumes:
   consul_agent_1: null
   consul_server_1: null
   consul_server_2: null
   consul_server_bootstrap: null
+  redis: null
 #  nsqd: null
