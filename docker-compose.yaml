@@ -51,8 +51,8 @@ services:
     image: nsqio/nsq
     command: /nsqlookupd
     ports:
-      - "4160"
-      - "4161"
+      - "4160:4160"
+      - "4161:4161"
 
   nsqd:
     image: nsqio/nsq
@@ -62,8 +62,8 @@ services:
     volumes:
       - nsqd:/data
     ports:
-      - "4150"
-      - "4151"
+      - "4150:4150"
+      - "4151:4151"
 
   nsqadmin:
     image: nsqio/nsq
@@ -71,7 +71,7 @@ services:
     depends_on:
       - nsqlookupd  
     ports:
-      - "4171"
+      - "4171:4171"
 
  ###############
  ### nsq end ###
