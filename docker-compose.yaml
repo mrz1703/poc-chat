@@ -1,0 +1,89 @@
+version: '3'
+
+services:
+
+  ####################
+  ### Consul start ###
+  ####################
+
+  consul-agent-1: &consul-agent
+    image: consul:latest
+    command: "agent -retry-join consul-server-bootstrap -client 0.0.0.0"
+    volumes:
+      - consul_agent_1:/consul
+    networks:
+      - consul
+#  consul-agent-2:
+#    <<: *consul-agent
+#  consul-agent-3:
+#    <<: *consul-agent
+
+  consul-server-1: &consul-server
+    <<: *consul-agent
+    command: "agent -server -retry-join consul-server-bootstrap -client 0.0.0.0"
+    volumes:
+      - consul_server_1:/consul
+  consul-server-2:
+    <<: *consul-server
+    volumes:
+      - consul_server_2:/consul
+
+  consul-server-bootstrap:
+    <<: *consul-agent
+    command: "agent -server -bootstrap-expect 3 -ui -client 0.0.0.0"
+    volumes:
+      - consul_server_bootstrap:/consul
+    ports:
+      - "8400:8400"
+      - "8500:8500"
+      - "8600:8600"
+      - "8600:8600/udp"
+
+ ##################
+ ### Consul end ###
+ ##################
+
+ #################
+ ### nsq start ###
+ #################
+
+  nsqlookupd:
+    image: nsqio/nsq
+    command: /nsqlookupd
+    ports:
+      - "4160"
+      - "4161"
+
+  nsqd:
+    image: nsqio/nsq
+    command: /nsqd --lookupd-tcp-address=nsqlookupd:4160 --data-path=/data
+    depends_on:
+      - nsqlookupd
+    volumes:
+      - nsqd:/data
+    ports:
+      - "4150"
+      - "4151"
+
+  nsqadmin:
+    image: nsqio/nsq
+    command: /nsqadmin --lookupd-http-address=nsqlookupd:4161
+    depends_on:
+      - nsqlookupd  
+    ports:
+      - "4171"
+
+ ###############
+ ### nsq end ###
+ ###############
+
+
+networks:
+  consul:
+
+volumes:
+  consul_agent_1: null
+  consul_server_1: null
+  consul_server_2: null
+  consul_server_bootstrap: null
+  nsqd: null
