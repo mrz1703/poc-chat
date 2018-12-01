@@ -8,7 +8,7 @@ import { Divider } from 'antd';
 
 const StyledLayout = styled.div`
   display: grid;
-  grid-template-columns: 40% 5px auto;
+  grid-template-columns: 300px 5px auto;
   grid-template-rows: 100%;
   padding: 5px;
   grid-column-gap: 5px;

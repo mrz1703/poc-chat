@@ -34,7 +34,7 @@ class Contacts extends Component {
                 renderItem={item => (
                 <List.Item>
                     <List.Item.Meta
-                        avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
+                        avatar={<Avatar icon="user" />}
                         title={<a href="#">{item.title}</a>}
                         description="Active 10m ago"
                     />
